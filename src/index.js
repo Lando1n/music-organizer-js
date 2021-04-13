@@ -74,9 +74,12 @@ async function main() {
 
   const res = await prompts(questions);
 
+  let songsMoved = 0;
   if (res.unsortedMusicPath) {
-    sort(res.unsortedMusicPath, ['.mp3']);
+    songsMoved = sort(res.unsortedMusicPath, ['.mp3']);
   }
+  console.log('Finished.');
+  console.log(`Songs Moved: ${songsMoved}`);
 }
 
 main();
