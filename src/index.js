@@ -75,7 +75,7 @@ async function main() {
   const res = await prompts(questions);
 
   if (res.unsortedMusicPath) {
-    sort(res.unsortedMusicPath);
+    sort(res.unsortedMusicPath, ['.mp3']);
   }
 }
 
