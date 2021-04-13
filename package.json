@@ -1,0 +1,36 @@
+{
+  "name": "music-organizer-js",
+  "version": "1.0.0",
+  "description": "Sorts your music files so that you don't have to.",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "jest .",
+    "lint": "eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lando1n/music-organizer-js.git"
+  },
+  "author": "Landon Martin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Lando1n/music-organizer-js/issues"
+  },
+  "homepage": "https://github.com/Lando1n/music-organizer-js#readme",
+  "devDependencies": {
+    "eslint": "^7.24.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-promise": "^4.3.1",
+    "prettier": "^2.2.1"
+  },
+  "dependencies": {
+    "fs": "0.0.1-security",
+    "os": "^0.1.1",
+    "path": "^0.12.7",
+    "prompts": "^2.4.1"
+  }
+}
