@@ -1,4 +1,6 @@
 const mm = require('music-metadata');
+const path = require('path');
+const fs = require('fs');
 
 const getFilesRecursively = require('./getFilesRecursively');
 
