@@ -10,7 +10,11 @@ function cacheAnswers(responses) {
 }
 
 function getAnswerCache() {
-  return require(cacheLocation);
+  let cache = {};
+  if (fs.existsSync(cacheLocation)) {
+    cache = require(cacheLocation);
+  }
+  return cache;
 }
 
 module.exports = {
