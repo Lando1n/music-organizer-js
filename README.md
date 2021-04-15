@@ -67,7 +67,6 @@ Music/
 ```
 AFTER
 ```
-# BEFORE
 Downloads/
   ...empty
 Music/
