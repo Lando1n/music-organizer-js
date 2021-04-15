@@ -21,6 +21,7 @@ npm run organize
 ## What does it do?
 This script will organize your music based on the metadata of the files.
 
+### Sorting your Music Directory
 Say your music looks like this:
 ```
 Music/
@@ -39,6 +40,44 @@ Music/
       Song2.mp3
     AlbumB/
       Song2.mp3
+  Band2/
+    AlbumZ/
+      Song1.mp3
+```
+
+### Sorting newly downloaded music
+You can even sort music from one directory into another. A prime example of this is getting new music in your Downloads folder and wanting to have it sorted into your Music directory.
+
+Example:
+BEFORE
+```
+Downloads/
+  Band1-AlbumC-Song1.mp3
+Music/
+  Band1/
+    AlbumA/
+      Song1.mp3
+      Song2.mp3
+    AlbumB/
+      Song2.mp3
+  Band2/
+    AlbumZ/
+      Song1.mp3
+```
+AFTER
+```
+# BEFORE
+Downloads/
+  ...empty
+Music/
+  Band1/
+    AlbumA/
+      Song1.mp3
+      Song2.mp3
+    AlbumB/
+      Song2.mp3
+    AlbumC/
+      Song1.mp3
   Band2/
     AlbumZ/
       Song1.mp3
