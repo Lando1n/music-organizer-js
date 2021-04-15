@@ -5,10 +5,8 @@ const path = require('path');
 const prompts = require('prompts');
 const sort = require('./utils/sort');
 
-const homeDir = os.homedir();
-
-async function main() {
-  //TODO: Ask about settings, store to file on first run, confirm on later runs.
+async function askQuestions() {
+  const homeDir = os.homedir();
   const questions = [
     {
       message: 'Where is your unsorted music?',
@@ -69,10 +67,35 @@ async function main() {
         fs.existsSync(value) && fs.statSync(value).isDirectory()
           ? true
           : "Path doesn't exist"
+    },
+    {
+      name: 'confirm',
+      type: 'select',
+      message: (prev, values) =>
+        `Please confirm: You would like to sort music from ${values.unsortedMusicPath} to ${values.sortedMusicPath}`,
+      choices: [
+        {
+          title: 'Yes'
+        },
+        {
+          title: 'No'
+        }
+      ]
     }
   ];
 
-  const res = await prompts(questions);
+  let res = await prompts(questions);
+
+  if (res.confirm) {
+    console.log("Ok, let's try again then");
+    res = await askQuestions();
+  }
+  return res;
+}
+
+async function main() {
+  //TODO: Ask about settings, store to file on first run, confirm on later runs.
+  const res = await askQuestions();
 
   let songsMoved = 0;
   if (res.unsortedMusicPath) {
