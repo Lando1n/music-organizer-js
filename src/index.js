@@ -88,7 +88,9 @@ async function main() {
 
   let songsMoved = 0;
   if (responses.unsortedMusicPath) {
-    songsMoved = sort(responses.unsortedMusicPath, ['.mp3']);
+    songsMoved = sort(responses.unsortedMusicPath, responses.sortedMusicPath, [
+      '.mp3'
+    ]);
   }
   console.log('Finished.');
   console.log(`Songs Moved: ${songsMoved}`);
