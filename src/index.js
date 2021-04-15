@@ -4,25 +4,21 @@ const path = require('path');
 
 const prompts = require('prompts');
 const sort = require('./utils/sort');
+const { cacheAnswers, getAnswerCache } = require('./utils/answerCaching');
+const {
+  getUnsortedMusicPathChoices,
+  getSortedMusicPathChoices
+} = require('./utils/choices');
 
-async function askQuestions() {
+async function askQuestions(answerCache = {}) {
   const homeDir = os.homedir();
+
   const questions = [
     {
       message: 'Where is your unsorted music?',
       type: 'autocomplete',
       name: 'unsortedMusicPath',
-      choices: [
-        {
-          title: path.join(homeDir, 'Downloads')
-        },
-        {
-          title: path.join(homeDir, 'Music')
-        },
-        {
-          title: 'other'
-        }
-      ],
+      choices: getUnsortedMusicPathChoices(answerCache),
       validate: (value) =>
         fs.existsSync(value) && fs.statSync(value).isDirectory()
           ? true
@@ -42,17 +38,7 @@ async function askQuestions() {
       message: 'Where do you want the music to be sorted to?',
       type: 'autocomplete',
       name: 'sortedMusicPath',
-      choices: [
-        {
-          title: path.join(homeDir, 'Music')
-        },
-        {
-          title: path.join(homeDir, 'Downloads')
-        },
-        {
-          title: 'other'
-        }
-      ],
+      choices: getSortedMusicPathChoices(answerCache),
       validate: (value) =>
         fs.existsSync(value) && fs.statSync(value).isDirectory()
           ? true
@@ -84,22 +70,25 @@ async function askQuestions() {
     }
   ];
 
-  let res = await prompts(questions);
+  let responses = await prompts(questions);
 
-  if (res.confirm) {
+  if (responses.confirm) {
     console.log("Ok, let's try again then");
-    res = await askQuestions();
+    responses = await askQuestions();
   }
-  return res;
+
+  return responses;
 }
 
 async function main() {
   //TODO: Ask about settings, store to file on first run, confirm on later runs.
-  const res = await askQuestions();
+  const answerCache = getAnswerCache();
+  const responses = await askQuestions(answerCache);
+  cacheAnswers(responses);
 
   let songsMoved = 0;
-  if (res.unsortedMusicPath) {
-    songsMoved = sort(res.unsortedMusicPath, ['.mp3']);
+  if (responses.unsortedMusicPath) {
+    songsMoved = sort(responses.unsortedMusicPath, ['.mp3']);
   }
   console.log('Finished.');
   console.log(`Songs Moved: ${songsMoved}`);
