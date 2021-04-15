@@ -1,7 +1,7 @@
 # music-organizer-js
 
 ## Description
-A tool to organize your new or old music collection!
+A CLI tool to organize your new or old music collection!
 
 ## Setup
 Simply install the dependencies and you're good to go! 
