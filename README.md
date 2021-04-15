@@ -49,6 +49,7 @@ Music/
 You can even sort music from one directory into another. A prime example of this is getting new music in your Downloads folder and wanting to have it sorted into your Music directory.
 
 Example:
+
 BEFORE
 ```
 Downloads/
