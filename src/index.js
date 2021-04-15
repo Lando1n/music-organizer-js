@@ -9,6 +9,7 @@ const {
   getUnsortedMusicPathChoices,
   getSortedMusicPathChoices
 } = require('./utils/choices');
+const { removeEmptyDirsRecursively } = require('./utils/cleanupDirs');
 
 async function askQuestions(answerCache = {}) {
   const homeDir = os.homedir();
@@ -93,6 +94,26 @@ async function main() {
   }
   console.log('Finished.');
   console.log(`Songs Moved: ${songsMoved}`);
+
+  const cleanupRes = await prompts({
+    name: 'cleanup',
+    type: 'select',
+    message: 'Would you like to remove empty directories?',
+    choices: [
+      {
+        title: 'Yes',
+        value: true
+      },
+      {
+        title: 'No',
+        value: false
+      }
+    ]
+  });
+
+  if (cleanupRes.cleanup) {
+    removeEmptyDirsRecursively(responses.unsortedMusicPath);
+  }
 }
 
 main();
