@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-function getFilesRecursively(dirPath, arrayOfFiles, extensions) {
+function getFilesRecursively(dirPath, arrayOfFiles, withExtensions) {
   files = fs.readdirSync(dirPath);
 
   files.forEach((file) => {
@@ -9,7 +9,7 @@ function getFilesRecursively(dirPath, arrayOfFiles, extensions) {
       arrayOfFiles.concat(getFilesRecursively(
         path.join(dirPath, file),
         arrayOfFiles,
-        extensions
+        withExtensions
       ));
     } else {
       arrayOfFiles.push(path.join(dirPath, file));
@@ -19,7 +19,7 @@ function getFilesRecursively(dirPath, arrayOfFiles, extensions) {
   return arrayOfFiles.filter((fullPath) => {
       const name = path.basename(fullPath);
       const ext = path.extname(fullPath);
-      return extensions.includes(ext) || extensions.includes(name);
+      return withExtensions.includes(ext) || (ext ==='' && withExtensions.includes(name));
     }
   );
 }
