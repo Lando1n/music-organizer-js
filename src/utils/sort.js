@@ -11,7 +11,11 @@ module.exports = async (unsortedPath, sortedPath, extensions) => {
   for (const startingLocation of unsortedFiles) {
     const metadata = await mm.parseFile(startingLocation);
 
-    let pathParts = [metadata.common.albumartist, metadata.common.album, `${metadata.common.title}${path.extname(startingLocation)}`];
+    let pathParts = [
+      metadata.common.albumartist,
+      metadata.common.album,
+      `${metadata.common.title}${path.extname(startingLocation)}`
+    ];
 
     // Remove invalid chars from paths
     let replaceRegex;
