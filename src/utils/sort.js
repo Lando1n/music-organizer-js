@@ -37,12 +37,14 @@ module.exports = async (unsortedPath, sortedPath, extensions) => {
     fs.mkdirSync(dir, { recursive: true });
     // Attempt to move the file
     try {
-      fs.renameSync(startingLocation, newLocation);
+      if (startingLocation !== newLocation) {
+        fs.renameSync(startingLocation, newLocation);
+        movedFiles++;
+        console.log(`Moved ${startingLocation} to ${newLocation}`);
+      }
     } catch (e) {
       console.error(`Failed to move file: ${startingLocation}, Reason: ${e}`);
     }
-    movedFiles++;
-    console.log(`Moved ${startingLocation} to ${newLocation}`);
   }
   return movedFiles;
 };
