@@ -87,9 +87,11 @@ async function main() {
 
   let songsMoved = 0;
   if (responses.unsortedMusicPath) {
-    songsMoved = await sort(responses.unsortedMusicPath, responses.sortedMusicPath, [
-      '.mp3'
-    ]);
+    songsMoved = await sort(
+      responses.unsortedMusicPath,
+      responses.sortedMusicPath,
+      ['.mp3']
+    );
   }
 
   const cleanupRes = await prompts({
@@ -114,9 +116,11 @@ async function main() {
   return songsMoved;
 }
 
-main().catch((e) => {
-  throw Error(`Music Organizer failed due to: ${e}`);
-}).then((songsMoved) => {
-  console.log('Finished.');
-  console.log(`Songs Moved: ${songsMoved}`);
-});
+main()
+  .catch((e) => {
+    throw Error(`Music Organizer failed due to: ${e}`);
+  })
+  .then((songsMoved) => {
+    console.log('Finished.');
+    console.log(`Songs Moved: ${songsMoved}`);
+  });

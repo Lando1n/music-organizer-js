@@ -6,22 +6,26 @@ function getFilesRecursively(dirPath, arrayOfFiles, withExtensions) {
 
   files.forEach((file) => {
     if (fs.statSync(path.join(dirPath, file)).isDirectory()) {
-      arrayOfFiles.concat(getFilesRecursively(
-        path.join(dirPath, file),
-        arrayOfFiles,
-        withExtensions
-      ));
+      arrayOfFiles.concat(
+        getFilesRecursively(
+          path.join(dirPath, file),
+          arrayOfFiles,
+          withExtensions
+        )
+      );
     } else {
       arrayOfFiles.push(path.join(dirPath, file));
     }
   });
 
   return arrayOfFiles.filter((fullPath) => {
-      const name = path.basename(fullPath);
-      const ext = path.extname(fullPath);
-      return withExtensions.includes(ext) || (ext ==='' && withExtensions.includes(name));
-    }
-  );
+    const name = path.basename(fullPath);
+    const ext = path.extname(fullPath);
+    return (
+      withExtensions.includes(ext) ||
+      (ext === '' && withExtensions.includes(name))
+    );
+  });
 }
 
 module.exports = getFilesRecursively;
