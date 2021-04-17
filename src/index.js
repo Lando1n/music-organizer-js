@@ -1,8 +1,7 @@
 const os = require('os');
 const fs = require('fs');
-const path = require('path');
-
 const prompts = require('prompts');
+
 const sort = require('./utils/sort');
 const { cacheAnswers, getAnswerCache } = require('./utils/answerCaching');
 const {
@@ -88,12 +87,12 @@ async function main() {
 
   let songsMoved = 0;
   if (responses.unsortedMusicPath) {
-    songsMoved = sort(responses.unsortedMusicPath, responses.sortedMusicPath, [
-      '.mp3'
-    ]);
+    songsMoved = await sort(
+      responses.unsortedMusicPath,
+      responses.sortedMusicPath,
+      ['.mp3']
+    );
   }
-  console.log('Finished.');
-  console.log(`Songs Moved: ${songsMoved}`);
 
   const cleanupRes = await prompts({
     name: 'cleanup',
@@ -114,6 +113,14 @@ async function main() {
   if (cleanupRes.cleanup) {
     removeEmptyDirsRecursively(responses.unsortedMusicPath);
   }
+  return songsMoved;
 }
 
-main();
+main()
+  .catch((e) => {
+    throw Error(`Music Organizer failed due to: ${e}`);
+  })
+  .then((songsMoved) => {
+    console.log('Finished.');
+    console.log(`Songs Moved: ${songsMoved}`);
+  });

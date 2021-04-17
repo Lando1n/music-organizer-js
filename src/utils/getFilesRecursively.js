@@ -1,24 +1,27 @@
 const fs = require('fs');
 const path = require('path');
 
-function getFilesRecursively(dirPath, arrayOfFiles, extensions) {
+function getFilesRecursively(dirPath, arrayOfFiles, withExtensions) {
   files = fs.readdirSync(dirPath);
 
   files.forEach((file) => {
     if (fs.statSync(path.join(dirPath, file)).isDirectory()) {
-      arrayOfFiles = getFilesRecursively(
-        path.join(dirPath, file),
-        arrayOfFiles,
-        extensions
+      arrayOfFiles.concat(
+        getFilesRecursively(
+          path.join(dirPath, file),
+          arrayOfFiles,
+          withExtensions
+        )
       );
     } else {
       arrayOfFiles.push(path.join(dirPath, file));
     }
   });
 
-  return arrayOfFiles.filter((filename) =>
-    extensions.includes(path.extname(filename))
-  );
+  return arrayOfFiles.filter((fullPath) => {
+    const ext = path.extname(fullPath);
+    return withExtensions.includes(ext);
+  });
 }
 
 module.exports = getFilesRecursively;

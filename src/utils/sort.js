@@ -4,20 +4,47 @@ const fs = require('fs');
 
 const getFilesRecursively = require('./getFilesRecursively');
 
-module.exports = (unsortedPath, sortedPath, extensions) => {
+module.exports = async (unsortedPath, sortedPath, extensions) => {
   let movedFiles = 0;
   const unsortedFiles = getFilesRecursively(unsortedPath, [], extensions);
 
-  unsortedFiles.forEach(async (startingLocation) => {
+  for (const startingLocation of unsortedFiles) {
     const metadata = await mm.parseFile(startingLocation);
-    const dir = path
-      .join(sortedPath, metadata.common.albumartist, metadata.common.album)
-      .replace(/[,-]/g, '');
+
+    let pathParts = [
+      metadata.common.albumartist,
+      metadata.common.album,
+      `${metadata.common.title}${path.extname(startingLocation)}`
+    ];
+
+    // Remove invalid chars from paths
+    let replaceRegex;
+    switch (process.platform) {
+      case 'win32':
+        replaceRegex = /[<>:"/\\|?*]/g;
+        break;
+      case 'linux':
+        replaceRegex = /[/]/g;
+        break;
+      default:
+        throw Error('Only Linux and Windows are currently supported!');
+    }
+    pathParts = pathParts.map((part) => part.replace(replaceRegex, ''));
+
+    const newLocation = path.join(sortedPath, ...pathParts);
+    const dir = path.dirname(newLocation);
+    // Create a directory for the file to be moved
     fs.mkdirSync(dir, { recursive: true });
-    const newLocation = path.join(dir, path.basename(startingLocation));
-    fs.renameSync(startingLocation, newLocation);
-    movedFiles++;
-    console.log(`Moved ${startingLocation} to ${newLocation}`);
-  });
+    // Attempt to move the file
+    try {
+      if (startingLocation !== newLocation) {
+        fs.renameSync(startingLocation, newLocation);
+        movedFiles++;
+        console.log(`Moved ${startingLocation} to ${newLocation}`);
+      }
+    } catch (e) {
+      console.error(`Failed to move file: ${startingLocation}, Reason: ${e}`);
+    }
+  }
   return movedFiles;
 };
