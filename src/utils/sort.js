@@ -1,8 +1,8 @@
-const mm = require('music-metadata');
-const path = require('path');
-const fs = require('fs');
+const mm = require("music-metadata");
+const path = require("path");
+const fs = require("fs");
 
-const getFilesRecursively = require('./getFilesRecursively');
+const getFilesRecursively = require("./getFilesRecursively");
 
 module.exports = async (unsortedPath, sortedPath, extensions) => {
   let movedFiles = 0;
@@ -10,26 +10,26 @@ module.exports = async (unsortedPath, sortedPath, extensions) => {
 
   for (const startingLocation of unsortedFiles) {
     const metadata = await mm.parseFile(startingLocation);
-
-    let pathParts = [
-      metadata.common.albumartist,
-      metadata.common.album,
-      `${metadata.common.title}${path.extname(startingLocation)}`
-    ];
+    const artist = metadata.common.albumartist || "Unknown Artist";
+    const album = metadata.common.album || "Unknown Album";
+    const filename = metadata.common.title
+      ? `${metadata.common.title}${path.extname(startingLocation)}`
+      : path.basename(startingLocation);
+    let pathParts = [artist, album, filename];
 
     // Remove invalid chars from paths
     let replaceRegex;
     switch (process.platform) {
-      case 'win32':
+      case "win32":
         replaceRegex = /[<>:"/\\|?*]/g;
         break;
-      case 'linux':
+      case "linux":
         replaceRegex = /[/]/g;
         break;
       default:
-        throw Error('Only Linux and Windows are currently supported!');
+        throw Error("Only Linux and Windows are currently supported!");
     }
-    pathParts = pathParts.map((part) => part.replace(replaceRegex, ''));
+    pathParts = pathParts.map((part) => part.replace(replaceRegex, ""));
 
     const newLocation = path.join(sortedPath, ...pathParts);
     const dir = path.dirname(newLocation);
