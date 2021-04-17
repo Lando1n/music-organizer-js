@@ -116,7 +116,7 @@ async function main() {
 
 main().catch((e) => {
   throw Error(`Music Organizer failed due to: ${e}`);
-}).then((songsMoved)=> {
+}).then((songsMoved) => {
   console.log('Finished.');
   console.log(`Songs Moved: ${songsMoved}`);
 });
