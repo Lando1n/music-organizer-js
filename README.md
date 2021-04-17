@@ -6,6 +6,10 @@ A CLI tool to organize your new or old music collection!
 Currently Supported File Types:
 * mp3
 
+Currently Supported Operating Systems:
+* Linux
+* Windows
+
 ## Setup
 Simply install the dependencies and you're good to go! 
 ```
@@ -50,7 +54,7 @@ You can even sort music from one directory into another. A prime example of this
 
 Example:
 
-BEFORE
+Say your music and downloads directories looks like this:
 ```
 Downloads/
   Band1-AlbumC-Song1.mp3
@@ -65,7 +69,7 @@ Music/
     AlbumZ/
       Song1.mp3
 ```
-AFTER
+It would be sorted to look like:
 ```
 Downloads/
   ...empty
