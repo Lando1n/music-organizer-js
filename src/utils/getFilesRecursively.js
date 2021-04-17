@@ -19,12 +19,8 @@ function getFilesRecursively(dirPath, arrayOfFiles, withExtensions) {
   });
 
   return arrayOfFiles.filter((fullPath) => {
-    const name = path.basename(fullPath);
     const ext = path.extname(fullPath);
-    return (
-      withExtensions.includes(ext) ||
-      (ext === '' && withExtensions.includes(name))
-    );
+    return withExtensions.includes(ext);
   });
 }
 
