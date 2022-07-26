@@ -17,7 +17,13 @@ function getAnswerCache() {
   return cache;
 }
 
+function validateCache() {
+  const cache = getAnswerCache();
+  return cache.unsortedMusicPath && cache.sortedMusicPath && cache.cleanup;
+}
+
 module.exports = {
   cacheAnswers,
-  getAnswerCache
+  getAnswerCache,
+  validateCache
 };
