@@ -3,7 +3,11 @@ const fs = require('fs');
 const prompts = require('prompts');
 
 const sort = require('./utils/sort');
-const { cacheAnswers, getAnswerCache } = require('./utils/answerCaching');
+const {
+  cacheAnswers,
+  getAnswerCache,
+  validateCache
+} = require('./utils/answerCaching');
 const {
   getUnsortedMusicPathChoices,
   getSortedMusicPathChoices
@@ -55,10 +59,31 @@ async function askQuestions(answerCache = {}) {
           : "Path doesn't exist"
     },
     {
+      name: 'cleanup',
+      type: 'select',
+      message: 'Would you like to remove empty directories?',
+      choices: [
+        {
+          title: 'Yes',
+          value: true
+        },
+        {
+          title: 'No',
+          value: false
+        }
+      ]
+    },
+    {
       name: 'confirm',
       type: 'select',
       message: (prev, values) =>
-        `Please confirm: You would like to sort music from ${values.unsortedMusicPath} to ${values.sortedMusicPath}`,
+        `Please confirm: You would like to sort music from ${
+          values.unsortedMusicPath
+        } to ${values.sortedMusicPath} || ${
+          values.cleanup
+            ? 'And cleanup empty directories'
+            : 'Do not cleanup empty directories'
+        }`,
       choices: [
         {
           title: 'Yes'
@@ -70,21 +95,17 @@ async function askQuestions(answerCache = {}) {
     }
   ];
 
-  let responses = await prompts(questions);
+  const responses = await prompts(questions);
 
   if (responses.confirm) {
-    console.log("Ok, let's try again then");
+    console.log("Ok, let's try again then! Try not to mess up this time, eh.");
     responses = await askQuestions();
   }
 
   return responses;
 }
 
-async function main() {
-  const answerCache = getAnswerCache();
-  const responses = await askQuestions(answerCache);
-  cacheAnswers(responses);
-
+async function runResponses(responses) {
   let songsMoved = 0;
   if (responses.unsortedMusicPath) {
     songsMoved = await sort(
@@ -94,26 +115,47 @@ async function main() {
     );
   }
 
-  const cleanupRes = await prompts({
-    name: 'cleanup',
-    type: 'select',
-    message: 'Would you like to remove empty directories?',
-    choices: [
-      {
-        title: 'Yes',
-        value: true
-      },
-      {
-        title: 'No',
-        value: false
-      }
-    ]
-  });
-
-  if (cleanupRes.cleanup) {
+  if (responses.cleanup) {
     removeEmptyDirsRecursively(responses.unsortedMusicPath);
   }
+
   return songsMoved;
+}
+
+async function main() {
+  const answerCache = getAnswerCache();
+  const isCacheValid = validateCache();
+  let runCache = false;
+  if (isCacheValid) {
+    const res = await prompts([
+      {
+        message: `Run with your previous settings? ${
+          answerCache.unsortedMusicPath
+        } >> ${answerCache.sortedMusicPath} || ${
+          answerCache.cleanup
+            ? 'And cleanup empty directories'
+            : 'Do not cleanup empty directories'
+        }`,
+        type: 'select',
+        name: 'runCache',
+        choices: [
+          { title: 'Yes', value: true },
+          { title: 'No', value: false }
+        ]
+      }
+    ]);
+    runCache = res.runCache;
+  }
+
+  let responses;
+  if (runCache) {
+    responses = answerCache;
+  } else {
+    responses = await askQuestions(answerCache);
+    cacheAnswers(responses);
+  }
+
+  return runResponses(responses);
 }
 
 main()
