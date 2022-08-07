@@ -10,6 +10,13 @@ Currently Supported Operating Systems:
 * Linux
 * Windows
 
+## Recommended Usage
+It is recommended to make the target directory different from where you store your music. Generally this is your downloads folder. 
+
+This will reduce any risk of causing harm to your music libraries, plus it will reduce the time it takes to run as you don't need to sort all music everytime. 
+
+Use at your own risk, I do not take responsibility for messing up your music libraries. 
+
 ## Setup
 
 This project assumes you have installed node/npm: https://nodejs.org/en/download/
