@@ -18,6 +18,7 @@ Simply install the dependencies and you're good to go!
 ```
 npm install
 ```
+Or if you are running Windows, just execute `setup.bat`
 
 ## How to Run
 Start the tool and follow the prompts with:
