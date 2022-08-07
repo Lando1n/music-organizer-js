@@ -124,7 +124,16 @@ async function runResponses(responses) {
 
 async function main() {
   const answerCache = getAnswerCache();
-  const isCacheValid = validateCache();
+  if (!answerCache || answerCache === {}) {
+    console.log('Welcome to Music Organizer JS!\n');
+    console.log(
+      "I'm under the impression that you're a first timer. Happy to have you.\n"
+    );
+    console.log(
+      "Just answer the prompts honestly, and we won't have any problems."
+    );
+  }
+  const isCacheValid = validateCache(answerCache);
   let runCache = false;
   if (isCacheValid) {
     const res = await prompts([
@@ -163,6 +172,12 @@ main()
     throw Error(`Music Organizer failed due to: ${e}`);
   })
   .then((songsMoved) => {
-    console.log('Finished.');
-    console.log(`Songs Moved: ${songsMoved}`);
+    if (songsMoved === 0) {
+      console.warn(
+        "It appears I haven't moved any files, you sure that is the directory you're looking for?\n"
+      );
+    } else {
+      console.log('Finished.');
+      console.log(`Songs Moved: ${songsMoved}`);
+    }
   });
