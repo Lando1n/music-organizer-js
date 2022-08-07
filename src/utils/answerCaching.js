@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const cacheDir = path.join(__dirname, '..', '..', 'cache');
-const cacheLocation = path.join(cacheDir, 'previousAnswer.json');
+const cacheLocation = path.join(cacheDir, 'cache.json');
 
 function cacheAnswers(responses) {
   if (!fs.existsSync(cacheDir)) fs.mkdirSync(cacheDir);
@@ -17,8 +17,7 @@ function getAnswerCache() {
   return cache;
 }
 
-function validateCache() {
-  const cache = getAnswerCache();
+function validateCache(cache) {
   return cache.unsortedMusicPath && cache.sortedMusicPath && cache.cleanup;
 }
 
