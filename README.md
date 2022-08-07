@@ -11,6 +11,9 @@ Currently Supported Operating Systems:
 * Windows
 
 ## Setup
+
+This project assumes you have installed node/npm: https://nodejs.org/en/download/
+
 Simply install the dependencies and you're good to go! 
 ```
 npm install
