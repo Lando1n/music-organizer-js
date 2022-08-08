@@ -20,6 +20,5 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            music-organizer
+            music-organizer-js
             README.md
-

@@ -1,8 +1,8 @@
-const { compile } = require('nexe')
+const { compile } = require('nexe');
 
 compile({
   input: './src/index.js',
-  build: true,
+  build: true
 }).then(() => {
-  console.log('success')
-})
+  console.log('success');
+});
