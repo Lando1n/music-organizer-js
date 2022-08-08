@@ -111,7 +111,7 @@ async function runResponses(responses) {
     songsMoved = await sort(
       responses.unsortedMusicPath,
       responses.sortedMusicPath,
-      ['.mp3']
+      ['.mp3', '.flac']
     );
   }
 
