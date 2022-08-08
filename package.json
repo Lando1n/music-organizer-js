@@ -1,6 +1,6 @@
 {
   "name": "music-organizer-js",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Sorts your music files so that you don't have to.",
   "main": "src/index.js",
   "scripts": {
@@ -26,13 +26,13 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-promise": "^4.3.1",
+    "nexe": "^4.0.0-rc.1",
     "prettier": "^2.2.1"
   },
   "dependencies": {
     "fs": "0.0.1-security",
     "lodash": "^4.17.21",
     "music-metadata": "^7.8.3",
-    "nexe": "^4.0.0-rc.1",
     "os": "^0.1.1",
     "path": "^0.12.7",
     "prompts": "^2.4.1"
