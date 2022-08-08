@@ -5,6 +5,7 @@ A CLI tool to organize your new or old music collection!
 
 Currently Supported File Types:
 * mp3
+* flac
 
 Currently Supported Operating Systems:
 * Linux
