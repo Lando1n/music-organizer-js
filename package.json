@@ -1,6 +1,6 @@
 {
   "name": "music-organizer-js",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "description": "Sorts your music files so that you don't have to.",
   "main": "src/index.js",
   "scripts": {
