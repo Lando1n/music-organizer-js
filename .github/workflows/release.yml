@@ -19,10 +19,9 @@ jobs:
           npm install
       - name: Build
         run: |
-          node build.js
+          npm run build
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            music-organizer-js
-            README.md
+            ./output/music-organizer-js

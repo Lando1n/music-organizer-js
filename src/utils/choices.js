@@ -48,6 +48,9 @@ function getSortedMusicPathChoices(answerCache) {
         title: path.join(homeDir, 'Downloads')
       },
       {
+        title: path.join(homeDir, 'Documents')
+      },
+      {
         title: 'other'
       }
     ]),

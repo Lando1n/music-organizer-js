@@ -1,8 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
-const cacheDir = path.join(__dirname, '..', '..', 'cache');
-const cacheLocation = path.join(cacheDir, 'cache.json');
+const cacheDir = path.join(__dirname, '..', '..');
+const cacheLocation = path.join(cacheDir, '.music-organizer-cache.json');
 
 function cacheAnswers(responses) {
   if (!fs.existsSync(cacheDir)) fs.mkdirSync(cacheDir);
