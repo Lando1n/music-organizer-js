@@ -24,7 +24,7 @@ jobs:
           key: linux-nexe-cache
       - name: Build
         run: |
-          npm run build -- -t linux-x64
+          npm run build -- -t linux-x64-14.15.3
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
@@ -48,7 +48,7 @@ jobs:
           key: windows-nexe-cache
       - name: Build
         run: |
-          npm run build -- -t windows-x64
+          npm run build -- -t windows-x64-14.5.0
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
