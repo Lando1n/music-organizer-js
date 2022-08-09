@@ -29,7 +29,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            ./music-organizer-js
+            ./output/music-organizer-js
   build_windows:
     runs-on: ubuntu-20.04
     steps:
@@ -53,4 +53,4 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            ./music-organizer-js.exe
+            ./output/music-organizer-js.exe
