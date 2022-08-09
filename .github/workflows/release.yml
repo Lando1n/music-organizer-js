@@ -6,22 +6,51 @@ on:
 name: Create Release
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  build_linux:
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 14
           cache: npm
       - name: Install Dependencies
         run: |
           npm install
+      - name: Cache Node Source
+        uses: actions/cache@v3
+        with:
+          path: ~/.nexe
+          key: linux-nexe-cache
       - name: Build
         run: |
-          npm run build
+          npm run build -- -t linux-x64-14.15.3
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            ./output/music-organizer-js
+            ./music-organizer-js
+  build_windows:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 14
+          cache: npm
+      - name: Install Dependencies
+        run: |
+          npm install
+      - name: Cache Node Source
+        uses: actions/cache@v3
+        with:
+          path: ~/.nexe
+          key: windows-nexe-cache
+      - name: Build
+        run: |
+          npm run build -- -t windows-x64-14.5.0
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            ./music-organizer-js.exe
