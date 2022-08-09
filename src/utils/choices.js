@@ -21,6 +21,9 @@ function getUnsortedMusicPathChoices(answerCache) {
         title: path.join(homeDir, 'Music')
       },
       {
+        title: path.join(homeDir, 'Documents')
+      },
+      {
         title: 'other'
       }
     ]),
@@ -46,9 +49,6 @@ function getSortedMusicPathChoices(answerCache) {
       },
       {
         title: path.join(homeDir, 'Downloads')
-      },
-      {
-        title: path.join(homeDir, 'Documents')
       },
       {
         title: 'other'
