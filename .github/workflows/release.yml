@@ -6,7 +6,7 @@ on:
 name: Create Release
 
 jobs:
-  build_linux:
+  build:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
