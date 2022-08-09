@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "eslint .",
     "organize": "node src/index.js",
-    "build": "nexe src/index.js  -o ./output/music-organizer-js"
+    "build": "node build"
   },
   "repository": {
     "type": "git",
