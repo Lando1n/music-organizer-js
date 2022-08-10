@@ -16,7 +16,7 @@ compile({
 }).then(() => {
   console.log('success');
 });
-
+// Build Mac
 compile({
   input: './src/index.js',
   target: 'mac-x64-14.15.3',

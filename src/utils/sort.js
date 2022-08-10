@@ -2,7 +2,7 @@ const mm = require('music-metadata');
 const path = require('path');
 const fs = require('fs');
 
-const getFilesRecursively = require('./getFilesRecursively');
+const { getFilesRecursively } = require('./files');
 
 module.exports = async (unsortedPath, sortedPath, extensions) => {
   let movedFiles = 0;
