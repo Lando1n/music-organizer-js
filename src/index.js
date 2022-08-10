@@ -1,13 +1,10 @@
 const os = require('os');
 const fs = require('fs');
+const path = require('path');
 const prompts = require('prompts');
 
 const sort = require('./utils/sort');
-const {
-  cacheAnswers,
-  getAnswerCache,
-  validateCache
-} = require('./utils/answerCaching');
+const Cache = require('./utils/Cache');
 const {
   getUnsortedMusicPathChoices,
   getSortedMusicPathChoices
@@ -123,8 +120,12 @@ async function runResponses(responses) {
 }
 
 async function main() {
-  const answerCache = getAnswerCache();
-  if (!answerCache || answerCache === {}) {
+  const cache = new Cache(
+    path.join(__dirname, '..', '.music-organizer-cache.json')
+  );
+  const answerCache = cache.get();
+
+  if (answerCache === {}) {
     console.log('Welcome to Music Organizer JS!\n');
     console.log(
       "I'm under the impression that you're a first timer. Happy to have you.\n"
@@ -135,7 +136,7 @@ async function main() {
   }
 
   let useCache = false;
-  if (validateCache(answerCache)) {
+  if (cache.validate()) {
     const res = await prompts([
       {
         message: `Run with your previous settings? ${
@@ -157,7 +158,7 @@ async function main() {
   }
 
   const responses = useCache ? answerCache : await askQuestions(answerCache);
-  cacheAnswers(responses);
+  cache.addTo(responses);
 
   const songsMoved = await runResponses(responses);
 
@@ -169,12 +170,13 @@ async function main() {
     console.log('Finished.');
     console.log(`Songs Moved: ${songsMoved}`);
   }
+  cache.write();
 }
 
 main()
   .catch((e) => {
     throw Error(`Music Organizer failed due to: ${e}`);
   })
-  .then((songsMoved) => {
-    console.log('Success.');
+  .then(() => {
+    console.log('Complete.');
   });
