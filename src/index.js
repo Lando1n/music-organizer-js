@@ -102,23 +102,6 @@ async function askQuestions(answerCache = {}) {
   return responses;
 }
 
-async function runResponses(responses) {
-  let songsMoved = 0;
-  if (responses.unsortedMusicPath) {
-    songsMoved = await sort(
-      responses.unsortedMusicPath,
-      responses.sortedMusicPath,
-      ['.mp3', '.flac']
-    );
-  }
-
-  if (responses.cleanup) {
-    removeEmptyDirsRecursively(responses.unsortedMusicPath);
-  }
-
-  return songsMoved;
-}
-
 async function main() {
   const cache = new Cache(
     path.join(__dirname, '..', '.music-organizer-cache.json')
@@ -160,7 +143,19 @@ async function main() {
   const responses = useCache ? answerCache : await askQuestions(answerCache);
   cache.addTo(responses);
 
-  const songsMoved = await runResponses(responses);
+  let songsMoved = 0;
+
+  if (responses.unsortedMusicPath) {
+    songsMoved = await sort(
+      responses.unsortedMusicPath,
+      responses.sortedMusicPath,
+      ['.mp3', '.flac']
+    );
+  }
+
+  if (responses.cleanup) {
+    removeEmptyDirsRecursively(responses.unsortedMusicPath);
+  }
 
   if (songsMoved === 0) {
     console.warn(
