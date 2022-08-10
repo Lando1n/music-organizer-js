@@ -12,7 +12,7 @@ const {
   getUnsortedMusicPathChoices,
   getSortedMusicPathChoices
 } = require('./utils/choices');
-const { removeEmptyDirsRecursively } = require('./utils/cleanupDirs');
+const { removeEmptyDirsRecursively } = require('./utils/files');
 
 async function askQuestions(answerCache = {}) {
   const homeDir = os.homedir();
@@ -133,9 +133,9 @@ async function main() {
       "Just answer the prompts honestly, and we won't have any problems."
     );
   }
-  const isCacheValid = validateCache(answerCache);
-  let runCache = false;
-  if (isCacheValid) {
+
+  let useCache = false;
+  if (validateCache(answerCache)) {
     const res = await prompts([
       {
         message: `Run with your previous settings? ${
@@ -146,25 +146,29 @@ async function main() {
             : 'Do not cleanup empty directories'
         }`,
         type: 'select',
-        name: 'runCache',
+        name: 'useCache',
         choices: [
           { title: 'Yes', value: true },
           { title: 'No', value: false }
         ]
       }
     ]);
-    runCache = res.runCache;
+    useCache = res.useCache;
   }
 
-  let responses;
-  if (runCache) {
-    responses = answerCache;
+  const responses = useCache ? answerCache : await askQuestions(answerCache);
+  cacheAnswers(responses);
+
+  const songsMoved = await runResponses(responses);
+
+  if (songsMoved === 0) {
+    console.warn(
+      "It appears I haven't moved any files, you sure that is the directory you're looking for?\n"
+    );
   } else {
-    responses = await askQuestions(answerCache);
-    cacheAnswers(responses);
+    console.log('Finished.');
+    console.log(`Songs Moved: ${songsMoved}`);
   }
-
-  return runResponses(responses);
 }
 
 main()
@@ -172,12 +176,5 @@ main()
     throw Error(`Music Organizer failed due to: ${e}`);
   })
   .then((songsMoved) => {
-    if (songsMoved === 0) {
-      console.warn(
-        "It appears I haven't moved any files, you sure that is the directory you're looking for?\n"
-      );
-    } else {
-      console.log('Finished.');
-      console.log(`Songs Moved: ${songsMoved}`);
-    }
+    console.log('Success.');
   });
