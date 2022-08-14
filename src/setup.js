@@ -1,5 +1,6 @@
 const os = require('os');
 const fs = require('fs');
+const path = require('path');
 const prompts = require('prompts');
 
 const paths = require('./paths');
@@ -11,9 +12,23 @@ const {
   getSongFormatChoices
 } = require('./utils/choices');
 
+function getDynamicPaths(input, choices) {
+  if (input && fs.existsSync(input) && fs.statSync(input).isDirectory()) {
+    const extraChoices = fs.readdirSync(input).map((dir) => {
+      return {
+        title: path.join(input, dir)
+      };
+    });
+    choices = choices.concat(extraChoices);
+  }
+  const allChoices = choices.filter((choice) => {
+    return choice.title.startsWith(input);
+  });
+  return Promise.resolve(allChoices);
+}
+
 async function askQuestions() {
   const settings = new Settings(paths.setupSettings);
-  const homeDir = os.homedir();
   const questions = [
     {
       message: 'Choose your file naming format.',
@@ -47,17 +62,8 @@ async function askQuestions() {
       validate: (value) =>
         fs.existsSync(value) && fs.statSync(value).isDirectory()
           ? true
-          : "Path doesn't exist"
-    },
-    {
-      message: 'Type in the path to your unsorted music:',
-      type: (prev) => (prev === 'other' ? 'text' : null),
-      name: 'unsortedMusicPath',
-      initial: homeDir,
-      validate: (value) =>
-        fs.existsSync(value) && fs.statSync(value).isDirectory()
-          ? true
-          : "Path doesn't exist"
+          : "Path doesn't exist",
+      suggest: getDynamicPaths
     },
     {
       message: 'Where do you want the music to be sorted to?',
@@ -67,17 +73,8 @@ async function askQuestions() {
       validate: (value) =>
         fs.existsSync(value) && fs.statSync(value).isDirectory()
           ? true
-          : "Path doesn't exist"
-    },
-    {
-      message: 'Type in the path to your sorted music:',
-      type: (prev) => (prev === 'other' ? 'text' : null),
-      name: 'sortedMusicPath',
-      initial: homeDir,
-      validate: (value) =>
-        fs.existsSync(value) && fs.statSync(value).isDirectory()
-          ? true
-          : "Path doesn't exist"
+          : "Path doesn't exist",
+      suggest: getDynamicPaths
     },
     {
       name: 'cleanup',

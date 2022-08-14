@@ -42,9 +42,6 @@ function getUnsortedMusicPathChoices(answerCache) {
       },
       {
         title: path.join(homeDir, 'Documents')
-      },
-      {
-        title: 'other'
       }
     ]),
     _.isEqual
@@ -69,9 +66,6 @@ function getSortedMusicPathChoices(answerCache) {
       },
       {
         title: path.join(homeDir, 'Downloads')
-      },
-      {
-        title: 'other'
       }
     ]),
     _.isEqual
