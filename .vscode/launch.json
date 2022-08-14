@@ -8,19 +8,24 @@
       "type": "node",
       "request": "launch",
       "name": "Setup",
-
-      "program": "${workspaceFolder}/src/setup.js",
+      "program": "${workspaceFolder}/src/entrypoint.js",
       "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen"
+      "internalConsoleOptions": "neverOpen",
+      "args": [
+        "setup"
+      ]
     },
     {
       "type": "node",
       "request": "launch",
       "name": "Organize",
 
-      "program": "${workspaceFolder}/src/organize.js",
+      "program": "${workspaceFolder}/src/entrypoint.js",
       "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen"
+      "internalConsoleOptions": "neverOpen",
+      "args": [
+        "organize"
+      ]
     }
   ]
 }

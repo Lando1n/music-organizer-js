@@ -5,8 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "lint": "eslint .",
-    "setup": "node src/setup.js",
-    "organize": "node src/organize.js",
+    "setup": "node src/entrypoint.js setup",
+    "organize": "node src/entrypoint.js organize",
     "build": "node build"
   },
   "repository": {
