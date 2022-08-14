@@ -19,6 +19,6 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            ./output/music-organizer-js
-            ./output/music-organizer-js-mac
-            ./output/music-organizer-js.exe
+            ./dist/music-organizer-js
+            ./dist/music-organizer-js-mac
+            ./dist/music-organizer-js.exe

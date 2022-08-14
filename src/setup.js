@@ -123,7 +123,7 @@ async function askQuestions() {
   return responses;
 }
 
-async function main() {
+async function runSetup() {
   const settings = new Settings(paths.setupSettings);
   const responses = await askQuestions();
 
@@ -133,10 +133,6 @@ async function main() {
   return responses;
 }
 
-main()
-  .catch((e) => {
-    throw Error(`Music Organizer setup failed due to: ${e}`);
-  })
-  .then(() => {
-    console.log('Setup Complete. You are now ready to organize!');
-  });
+module.exports = {
+  runSetup
+};
