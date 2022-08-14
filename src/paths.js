@@ -1,6 +1,6 @@
 const path = require('path');
 
-const settingsDir = path.join(__dirname, '..', 'settings');
+const settingsDir = path.join(__dirname, '..', '.settings');
 
 module.exports = {
   setupSettings: path.join(settingsDir, '.setup.json'),
