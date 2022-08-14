@@ -18,28 +18,6 @@ This will reduce any risk of causing harm to your music libraries, plus it will 
 
 Use at your own risk, I do not take responsibility for messing up your music libraries. 
 
-## Setup
-
-This project assumes you have installed node/npm: https://nodejs.org/en/download/
-
-Simply install the dependencies and you're good to go! 
-```
-npm install
-```
-
-## How to Run
-First, you need to run the setup to define the settings. 
-```bash
-npm run setup
-```
-
-Now you can organize!
-
-Start the process using the settings from the setup by running:
-```bash
-npm run organize
-```
-
 ## What does it do?
 This script will organize your music based on the metadata of the files.
 
@@ -104,3 +82,47 @@ Music/
     AlbumZ/
       Song1.mp3
 ```
+
+
+## Usage
+
+Run setup
+```bash
+./music-organizer-js setup
+```
+
+Organize! This will use the settings from the setup.
+```bash
+./music-organizer-js organize
+```
+
+## Development
+
+### Setup
+
+This project assumes you have installed node/npm: https://nodejs.org/en/download/
+
+Simply install the dependencies and you're good to go! 
+```
+npm install
+```
+
+### How to Run
+First, you need to run the setup to define the settings. 
+```bash
+npm run setup
+```
+
+Now you can organize!
+
+Start the process using the settings from the setup by running:
+```bash
+npm run organize
+```
+
+### Build
+Create the executables for all 3 operating systems
+```bash
+npm run build
+```
+Find the binaries under /dist
