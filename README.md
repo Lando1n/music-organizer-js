@@ -26,11 +26,17 @@ Simply install the dependencies and you're good to go!
 ```
 npm install
 ```
-Or if you are running Windows, just execute `setup.bat`
 
 ## How to Run
-Start the tool and follow the prompts with:
+First, you need to run the setup to define the settings. 
+```bash
+npm run setup
 ```
+
+Now you can organize!
+
+Start the process using the settings from the setup by running:
+```bash
 npm run organize
 ```
 
