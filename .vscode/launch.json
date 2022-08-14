@@ -7,9 +7,18 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch Program",
+      "name": "Setup",
 
-      "program": "${workspaceFolder}/src/index.js",
+      "program": "${workspaceFolder}/src/setup.js",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Organize",
+
+      "program": "${workspaceFolder}/src/organize.js",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen"
     }

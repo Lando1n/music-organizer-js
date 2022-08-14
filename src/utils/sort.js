@@ -1,20 +1,33 @@
+const _ = require('lodash');
 const mm = require('music-metadata');
 const path = require('path');
 const fs = require('fs');
 
 const { getFilesRecursively } = require('./files');
 
-module.exports = async (unsortedPath, sortedPath, extensions) => {
+module.exports = async (unsortedPath, sortedPath, format = '<Song>') => {
   let movedFiles = 0;
-  const unsortedFiles = getFilesRecursively(unsortedPath, [], extensions);
+
+  const supportedFormats = ['.mp3', '.flac'];
+  const unsortedFiles = getFilesRecursively(unsortedPath, [], supportedFormats);
 
   for (const startingLocation of unsortedFiles) {
     const metadata = await mm.parseFile(startingLocation);
+    const number = _.get(metadata, ['common', 'track', 'no']) || 0;
+    const title =
+      metadata.common.title ||
+      path
+        .basename(startingLocation)
+        .replace(path.extname(startingLocation), '');
     const artist = metadata.common.albumartist || 'Unknown Artist';
     const album = metadata.common.album || 'Unknown Album';
-    const filename = metadata.common.title
-      ? `${metadata.common.title}${path.extname(startingLocation)}`
-      : path.basename(startingLocation);
+
+    const filename = `${format
+      .replace('<Number>', number)
+      .replace('<Song>', title)
+      .replace('<Album>', album)
+      .replace('<Artist>', artist)}${path.extname(startingLocation)}`;
+
     let pathParts = [artist, album, filename];
 
     // Remove invalid chars from paths

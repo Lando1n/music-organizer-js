@@ -2,6 +2,26 @@ const os = require('os');
 const _ = require('lodash');
 const path = require('path');
 
+function getSongFormatChoices(answerCache) {
+  const previous = _.get(answerCache, 'fileformat')
+    ? [
+        {
+          value: _.get(answerCache, 'fileformat')
+        }
+      ]
+    : [];
+  const choices = _.uniqWith(
+    previous.concat([
+      { value: '<Song>' },
+      { value: '<Number>-<Song>' },
+      { value: '<Number>-<Song>-<Album>-<Artist>' },
+      { value: 'Custom' }
+    ]),
+    _.isEqual
+  );
+  return choices;
+}
+
 function getUnsortedMusicPathChoices(answerCache) {
   const homeDir = os.homedir();
   const previousUnsortedPath = _.get(answerCache, 'unsortedMusicPath')
@@ -59,4 +79,8 @@ function getSortedMusicPathChoices(answerCache) {
   return choices;
 }
 
-module.exports = { getUnsortedMusicPathChoices, getSortedMusicPathChoices };
+module.exports = {
+  getUnsortedMusicPathChoices,
+  getSortedMusicPathChoices,
+  getSongFormatChoices
+};

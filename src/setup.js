@@ -1,25 +1,49 @@
 const os = require('os');
 const fs = require('fs');
-const path = require('path');
 const prompts = require('prompts');
 
-const sort = require('./utils/sort');
-const Cache = require('./utils/Cache');
+const paths = require('./paths');
+const Settings = require('./utils/Settings');
+
 const {
   getUnsortedMusicPathChoices,
-  getSortedMusicPathChoices
+  getSortedMusicPathChoices,
+  getSongFormatChoices
 } = require('./utils/choices');
-const { removeEmptyDirsRecursively } = require('./utils/files');
 
-async function askQuestions(answerCache = {}) {
+async function askQuestions() {
+  const settings = new Settings(paths.setupSettings);
   const homeDir = os.homedir();
-
   const questions = [
+    {
+      message: 'Choose your file naming format.',
+      type: 'select',
+      name: 'fileformat',
+      choices: getSongFormatChoices(settings.get())
+    },
+    {
+      type: (prev) => {
+        return prev == 'Custom' ? 'text' : null;
+      },
+      message:
+        'Specify the format to name your files. Only use the following variables: <Number> || <Song> || <Album> || <Artist> and only use - or _ as separators.',
+      validate: (value) =>
+        value
+          .replace('-', '')
+          .replace('_', '')
+          .replace('<Number>', '')
+          .replace('<Song>', '')
+          .replace('<Album>', '')
+          .replace('<Artist>', '')
+          .trim() === ''
+          ? true
+          : "Input doesn't match the criteria"
+    },
     {
       message: 'Where is your unsorted music?',
       type: 'autocomplete',
       name: 'unsortedMusicPath',
-      choices: getUnsortedMusicPathChoices(answerCache),
+      choices: getUnsortedMusicPathChoices(settings.get()),
       validate: (value) =>
         fs.existsSync(value) && fs.statSync(value).isDirectory()
           ? true
@@ -39,7 +63,7 @@ async function askQuestions(answerCache = {}) {
       message: 'Where do you want the music to be sorted to?',
       type: 'autocomplete',
       name: 'sortedMusicPath',
-      choices: getSortedMusicPathChoices(answerCache),
+      choices: getSortedMusicPathChoices(settings.get()),
       validate: (value) =>
         fs.existsSync(value) && fs.statSync(value).isDirectory()
           ? true
@@ -103,75 +127,19 @@ async function askQuestions(answerCache = {}) {
 }
 
 async function main() {
-  const cache = new Cache(
-    path.join(__dirname, '..', '.music-organizer-cache.json')
-  );
-  const answerCache = cache.get();
+  const settings = new Settings(paths.setupSettings);
+  const responses = await askQuestions();
 
-  if (answerCache === {}) {
-    console.log('Welcome to Music Organizer JS!\n');
-    console.log(
-      "I'm under the impression that you're a first timer. Happy to have you.\n"
-    );
-    console.log(
-      "Just answer the prompts honestly, and we won't have any problems."
-    );
-  }
+  settings.addTo(responses);
+  settings.write();
 
-  let useCache = false;
-  if (cache.validate()) {
-    const res = await prompts([
-      {
-        message: `Run with your previous settings? ${
-          answerCache.unsortedMusicPath
-        } >> ${answerCache.sortedMusicPath} || ${
-          answerCache.cleanup
-            ? 'And cleanup empty directories'
-            : 'Do not cleanup empty directories'
-        }`,
-        type: 'select',
-        name: 'useCache',
-        choices: [
-          { title: 'Yes', value: true },
-          { title: 'No', value: false }
-        ]
-      }
-    ]);
-    useCache = res.useCache;
-  }
-
-  const responses = useCache ? answerCache : await askQuestions(answerCache);
-  cache.addTo(responses);
-
-  let songsMoved = 0;
-
-  if (responses.unsortedMusicPath) {
-    songsMoved = await sort(
-      responses.unsortedMusicPath,
-      responses.sortedMusicPath,
-      ['.mp3', '.flac']
-    );
-  }
-
-  if (responses.cleanup) {
-    removeEmptyDirsRecursively(responses.unsortedMusicPath);
-  }
-
-  if (songsMoved === 0) {
-    console.warn(
-      "It appears I haven't moved any files, you sure that is the directory you're looking for?\n"
-    );
-  } else {
-    console.log('Finished.');
-    console.log(`Songs Moved: ${songsMoved}`);
-  }
-  cache.write();
+  return responses;
 }
 
 main()
   .catch((e) => {
-    throw Error(`Music Organizer failed due to: ${e}`);
+    throw Error(`Music Organizer setup failed due to: ${e}`);
   })
   .then(() => {
-    console.log('Complete.');
+    console.log('Setup Complete. You are now ready to organize!');
   });
