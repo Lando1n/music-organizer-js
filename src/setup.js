@@ -1,4 +1,4 @@
-const os = require('os');
+const _ = require('lodash');
 const fs = require('fs');
 const path = require('path');
 const prompts = require('prompts');
@@ -12,18 +12,34 @@ const {
   getSongFormatChoices
 } = require('./utils/choices');
 
-function getDynamicPaths(input, choices) {
-  if (input && fs.existsSync(input) && fs.statSync(input).isDirectory()) {
-    const extraChoices = fs.readdirSync(input).map((dir) => {
+function getDirsFromPath(filePath) {
+  let dirs;
+  if (!filePath || filePath.length === 0) {
+    dirs = [];
+  } else if (fs.existsSync(filePath) && fs.statSync(filePath).isDirectory()) {
+    dirs = fs.readdirSync(filePath).map((dir) => {
       return {
-        title: path.join(input, dir)
+        title: path.join(filePath, dir)
       };
     });
-    choices = choices.concat(extraChoices);
+  } else {
+    const parentDir = path.dirname(filePath);
+    dirs = getDirsFromPath(parentDir);
   }
-  const allChoices = choices.filter((choice) => {
+  return dirs;
+}
+
+function getPathChoices(input, defaultChoices = []) {
+  let choices = [];
+  if (input) {
+    const scanChoices = getDirsFromPath(input);
+    choices = [{ title: input }].concat(scanChoices);
+  }
+  const filteredChoices = defaultChoices.filter((choice) => {
     return choice.title.startsWith(input);
   });
+
+  const allChoices = _.uniqWith(choices.concat(filteredChoices), _.isEqual);
   return Promise.resolve(allChoices);
 }
 
@@ -63,7 +79,7 @@ async function askQuestions() {
         fs.existsSync(value) && fs.statSync(value).isDirectory()
           ? true
           : "Path doesn't exist",
-      suggest: getDynamicPaths
+      suggest: getPathChoices
     },
     {
       message: 'Where do you want the music to be sorted to?',
@@ -74,7 +90,7 @@ async function askQuestions() {
         fs.existsSync(value) && fs.statSync(value).isDirectory()
           ? true
           : "Path doesn't exist",
-      suggest: getDynamicPaths
+      suggest: getPathChoices
     },
     {
       name: 'cleanup',
