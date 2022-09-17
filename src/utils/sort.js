@@ -5,11 +5,11 @@ const fs = require('fs');
 
 const { getFilesRecursively } = require('./files');
 
-module.exports = async (unsortedPath, sortedPath, format = '<Song>') => {
+module.exports = async (unsortedDir, sortedDir, format = '<Song>') => {
   let movedFiles = 0;
 
   const supportedFormats = ['.mp3', '.flac'];
-  const unsortedFiles = getFilesRecursively(unsortedPath, [], supportedFormats);
+  const unsortedFiles = getFilesRecursively(unsortedDir, [], supportedFormats);
 
   for (const startingLocation of unsortedFiles) {
     const metadata = await mm.parseFile(startingLocation);
@@ -28,8 +28,6 @@ module.exports = async (unsortedPath, sortedPath, format = '<Song>') => {
       .replace('<Album>', album)
       .replace('<Artist>', artist)}${path.extname(startingLocation)}`;
 
-    let pathParts = [artist, album, filename];
-
     // Remove invalid chars from paths
     let replaceRegex;
     switch (process.platform) {
@@ -42,16 +40,19 @@ module.exports = async (unsortedPath, sortedPath, format = '<Song>') => {
       default:
         throw Error('Only Linux and Windows are currently supported!');
     }
-    pathParts = pathParts.map((part) => part.replace(replaceRegex, ''));
+    const pathParts = [artist, album, filename].map((part) =>
+      part.replace(replaceRegex, '')
+    );
 
-    const newLocation = path.join(sortedPath, ...pathParts);
-    const dir = path.dirname(newLocation);
+    const newLocation = path.join(sortedDir, ...pathParts);
+
     // Create a directory for the file to be moved
-    fs.mkdirSync(dir, { recursive: true });
+    const newDir = path.dirname(newLocation);
+    fs.mkdirSync(newDir, { recursive: true });
     // Attempt to move the file
     try {
       if (startingLocation !== newLocation) {
-        fs.renameSync(startingLocation, newLocation);
+        fs.renameSync(startingLocation, getUniqueFilePath(newLocation));
         movedFiles++;
         console.log(`Moved ${startingLocation} to ${newLocation}`);
       }
@@ -61,3 +62,20 @@ module.exports = async (unsortedPath, sortedPath, format = '<Song>') => {
   }
   return movedFiles;
 };
+
+// Determine a file path that doesn't already exist
+function getUniqueFilePath(location) {
+  const { dir, name, ext } = path.parse(location);
+  let index = 1;
+  while (fs.existsSync(location)) {
+    console.debug(
+      `Duplicate found '${location}' adding index of ${index} to file name`
+    );
+    if (index > 20) {
+      throw Error('20 copies found for the same file, something may be wrong.');
+    }
+    location = path.join(dir, `${name} (${index})${ext}`);
+    index += 1;
+  }
+  return location;
+}
