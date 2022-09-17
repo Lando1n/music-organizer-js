@@ -9,7 +9,7 @@ Currently Supported File Types:
 
 Currently Supported Operating Systems:
 * Linux
-* Windows
+* WSL
 
 ## Recommended Usage
 It is recommended to make the target directory different from where you store your music. Generally this is your downloads folder. 
