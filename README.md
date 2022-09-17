@@ -18,6 +18,18 @@ This will reduce any risk of causing harm to your music libraries, plus it will 
 
 Use at your own risk, I do not take responsibility for messing up your music libraries. 
 
+## Usage
+
+Run setup first to determine the unsorted and sorted paths among other settings.
+```bash
+./music-organizer-js setup
+```
+
+Organize! This will use the settings from the setup step. You can run this multiple times with the same settings.
+```bash
+./music-organizer-js organize
+```
+
 ## What does it do?
 This script will organize your music based on the metadata of the files.
 
@@ -81,19 +93,6 @@ Music/
   Band2/
     AlbumZ/
       Song1.mp3
-```
-
-
-## Usage
-
-Run setup
-```bash
-./music-organizer-js setup
-```
-
-Organize! This will use the settings from the setup.
-```bash
-./music-organizer-js organize
 ```
 
 ## Development
