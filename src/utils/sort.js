@@ -52,7 +52,9 @@ module.exports = async (unsortedDir, sortedDir, format = '<Song>') => {
     // Attempt to move the file
     try {
       if (startingLocation !== newLocation) {
-        fs.renameSync(startingLocation, getUniqueFilePath(newLocation));
+        const newUniqueLocation = getUniqueFilePath(newLocation)
+        fs.copyFileSync(startingLocation, newUniqueLocation);
+        fs.unlinkSync(startingLocation);
         movedFiles++;
         console.log(`Moved ${startingLocation} to ${newLocation}`);
       }
